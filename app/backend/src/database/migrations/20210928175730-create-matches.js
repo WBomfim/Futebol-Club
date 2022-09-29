@@ -1,6 +1,6 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('matchers', {
+    await queryInterface.createTable('matches', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
