@@ -1,15 +1,16 @@
 import * as express from 'express';
+import LoginRoutes from './routes/LoginRoutes';
 
 class App {
   public app: express.Express;
+  private _loginRoutes: LoginRoutes;
 
   constructor() {
     this.app = express();
-
+    this._loginRoutes = new LoginRoutes();
     this.config();
-
-    // Não remover essa rotaa
     this.app.get('/', (req, res) => res.json({ ok: true }));
+    this.app.use('/login', this._loginRoutes.routes());
   }
 
   private config():void {
@@ -31,5 +32,4 @@ class App {
 
 export { App };
 
-// A execução dos testes de cobertura depende dessa exportação
 export const { app } = new App();
