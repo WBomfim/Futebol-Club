@@ -3,7 +3,7 @@ import Login from '../interfaces/Login';
 import LoginService from '../services/LoginService';
 
 export default class LoginController {
-  public _loginService: LoginService;
+  private _loginService: LoginService;
 
   constructor() {
     this._loginService = new LoginService();
@@ -11,7 +11,8 @@ export default class LoginController {
 
   public async login(req: Request, res: Response) {
     const { email, password } = req.body as Login;
-    const user = await this._loginService.login({ email, password });
-    return res.status(200).json(user);
+    const { code, data, error } = await this._loginService.login({ email, password });
+    if (error) return res.status(code).json(error);
+    return res.status(code).json(data);
   }
 }
