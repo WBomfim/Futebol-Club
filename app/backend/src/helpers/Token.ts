@@ -4,14 +4,9 @@ import User from '../database/models/User';
 import StatusHttp from '../types/statusHttp';
 
 export default class Token {
-  private _token: string;
-  private _secretKey: string;
+  private static _SECRET_KEY = process.env.JWT_SECRET as string;
 
-  constructor() {
-    this._secretKey = process.env.SECRET_KEY as string;
-  }
-
-  public generateToken(user: User) {
+  public static generateToken(user: User) {
     const { id, username } = user;
     const payload = {
       id,
@@ -22,11 +17,11 @@ export default class Token {
       expiresIn: '1d',
     };
 
-    this._token = sign(payload, this._secretKey, config);
-    return this._token;
+    const token = sign(payload, this._SECRET_KEY, config);
+    return token;
   }
 
-  public verifyToken(req: Request, res: Response, next: NextFunction) {
+  public static verifyToken(req: Request, res: Response, next: NextFunction) {
     const token = req.headers.authorization as string;
 
     if (!token) {
@@ -34,7 +29,7 @@ export default class Token {
     }
 
     try {
-      const payload = verify(token, this._secretKey);
+      const payload = verify(token, this._SECRET_KEY);
       req.body.payload = payload;
       next();
     } catch (error) {
