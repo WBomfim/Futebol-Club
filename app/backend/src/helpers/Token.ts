@@ -4,9 +4,9 @@ import User from '../database/models/User';
 import StatusHttp from '../types/statusHttp';
 
 export default class Token {
-  private static _SECRET_KEY = process.env.JWT_SECRET as string;
+  private _SECRET_KEY = process.env.JWT_SECRET as string;
 
-  public static generateToken(user: User): string {
+  public generateToken(user: User): string {
     const { id, username } = user;
     const payload = {
       id,
@@ -21,7 +21,8 @@ export default class Token {
     return token;
   }
 
-  public static verifyToken(req: Request, res: Response, next: NextFunction): Response | void {
+  public async verifyToken(req: Request, res: Response, next: NextFunction):
+  Promise<Response | void> {
     const token = req.headers.authorization as string;
 
     if (!token) {
