@@ -9,7 +9,7 @@ export default class LoginController {
     this._loginService = new LoginService();
   }
 
-  public async login(req: Request, res: Response) {
+  public async login(req: Request, res: Response): Promise<Response> {
     const { email, password } = req.body as Login;
     const { code, data, error } = await this._loginService.login({ email, password });
     if (error) return res.status(code).json(error);

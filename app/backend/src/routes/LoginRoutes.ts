@@ -10,7 +10,7 @@ export default class LoginRoutes {
     this._loginController = new LoginController();
   }
 
-  public routes() {
+  public routes(): Router {
     this._router.post('/', (req, res) => this._loginController.login(req, res));
     return this._router;
   }
