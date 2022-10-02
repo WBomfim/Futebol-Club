@@ -5,7 +5,8 @@ import * as sinon from 'sinon';
 import { Response } from 'superagent';
 import { app } from '../app';
 import UserModel from '../database/models/User';
-import usersFake from './mocks/Users.json';
+import usersFake from './mocks/users';
+import loginFake from './mocks/logins';
 
 chai.use(chaiHttp);
 
@@ -15,13 +16,9 @@ describe('Testa a rota POST /login', () => {
   describe('Verifica se o login é realizado com sucesso', () => {
     let loginResponse: Response;
     const userResponse = usersFake[0] as UserModel;
-    const userBody = {
-      email: "string",
-      password: "string"
-    }
 
-    before(async () => {
-      sinon.stub(UserModel, "findOne").resolves(userResponse);
+    before(() => {
+      sinon.stub(UserModel, 'findOne').resolves(userResponse);
     });
 
     after(() => {
@@ -29,10 +26,7 @@ describe('Testa a rota POST /login', () => {
     });
 
     it('Retorna um status code "200" e um objeto com a propriedade "token"', async () => {
-      loginResponse = await chai
-        .request(app)
-        .post('/login')
-        .send(userBody);
+      loginResponse = await chai.request(app).post('/login').send(loginFake.Valid);
       expect(loginResponse).to.have.status(200);
       expect(loginResponse.body).to.have.property('token');
     });
