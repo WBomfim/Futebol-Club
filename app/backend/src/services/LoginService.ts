@@ -5,22 +5,34 @@ import Token from '../helpers/Token';
 import StatusHttp from '../types/statusHttp';
 import ReturnError from '../interfaces/ReturnError';
 import { ReturnUser } from '../interfaces/ReturnService';
+import ValidateInfosLogin from '../schemas/ValidateInfosLogin';
 
 export default class LoginService {
   private _userModel: typeof User;
   private _crypto: typeof Crypto;
   private _token: typeof Token;
+  private _validateInfosLogin: typeof ValidateInfosLogin;
 
   constructor() {
     this._userModel = User;
     this._crypto = Crypto;
     this._token = Token;
+    this._validateInfosLogin = ValidateInfosLogin;
   }
 
   public async login(infos: Login): Promise<ReturnUser> {
     const { email, password } = infos;
 
+    const { error: validate } = this._validateInfosLogin.validate(infos) as ReturnError;
+    if (validate) return validate;
+
     const user = await this._userModel.findOne({ where: { email } });
+    if (!user) {
+      return {
+        code: StatusHttp.UNAUTHORIZED, error: { message: 'Incorrect email or password' },
+      };
+    }
+
     const { password: hash } = user as User;
 
     const { error } = this._crypto.verifyPassword(password, hash) as ReturnError;
