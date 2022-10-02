@@ -12,7 +12,9 @@ export default class Crypto {
     const isPasswordValid = compareSync(password, hash);
 
     if (!isPasswordValid) {
-      return { error: { code: StatusHttp.NOT_FOUND, error: { message: 'Invalid credentials' } } };
+      return {
+        error: { code: StatusHttp.UNAUTHORIZED, error: { message: 'Incorrect email or password' } },
+      };
     }
 
     return false;
