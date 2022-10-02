@@ -1,16 +1,28 @@
 import * as express from 'express';
 import LoginRoutes from './routes/LoginRoutes';
+import HandleErrors from './middlewares/HendleErrors';
+import 'express-async-errors';
 
 class App {
   public app: express.Express;
   private _loginRoutes: LoginRoutes;
+  private _handleErrors: typeof HandleErrors;
 
   constructor() {
     this.app = express();
-    this._loginRoutes = new LoginRoutes();
     this.config();
-    this.app.get('/', (req, res) => res.json({ ok: true }));
+    this._loginRoutes = new LoginRoutes();
+    this._handleErrors = HandleErrors;
+
+    this.app.get('/', (_req, res) => res.json({ ok: true }));
     this.app.use('/login', this._loginRoutes.routes());
+
+    this.app.use((
+      err: Error,
+      _req: express.Request,
+      res: express.Response,
+      _next: express.NextFunction,
+    ) => this._handleErrors.handleErrors(err, _req, res, _next));
   }
 
   private config():void {

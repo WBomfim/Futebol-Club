@@ -15,11 +15,13 @@ export default class LoginRoutes {
 
   public routes(): Router {
     this._router.post('/', (req, res) => this._loginController.login(req, res));
+
     this._router.get(
       '/validate',
       (req, res, next) => this._token.verifyToken(req, res, next),
       (req, res) => this._loginController.returnRole(req, res),
     );
+
     return this._router;
   }
 }
