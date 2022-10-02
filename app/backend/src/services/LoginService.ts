@@ -10,13 +10,13 @@ import ValidateInfosLogin from '../schemas/ValidateInfosLogin';
 export default class LoginService {
   private _userModel: typeof User;
   private _crypto: typeof Crypto;
-  private _token: typeof Token;
+  private _token: Token;
   private _validateInfosLogin: typeof ValidateInfosLogin;
 
   constructor() {
     this._userModel = User;
     this._crypto = Crypto;
-    this._token = Token;
+    this._token = new Token();
     this._validateInfosLogin = ValidateInfosLogin;
   }
 

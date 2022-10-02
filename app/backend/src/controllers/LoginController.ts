@@ -15,4 +15,11 @@ export default class LoginController {
     if (error) return res.status(code).json(error);
     return res.status(code).json(data);
   }
+
+  public async returnRole(req: Request, res: Response): Promise<Response> {
+    const { id } = req.body.payload;
+    const { code, data, error } = await this._loginService.returnRole(Number(id));
+    if (error) return res.status(code).json(error);
+    return res.status(code).json(data);
+  }
 }
