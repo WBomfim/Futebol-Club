@@ -1,4 +1,6 @@
 import { compareSync, genSaltSync, hashSync } from 'bcryptjs';
+import StatusHttp from '../types/statusHttp';
+import ReturnError from '../interfaces/ReturnError';
 
 export default class Crypto {
   public static hashPassword(password: string): string {
@@ -6,7 +8,13 @@ export default class Crypto {
     return hashSync(password, salt);
   }
 
-  public static verifyPassword(password: string, hash: string): boolean {
-    return compareSync(password, hash);
+  public static verifyPassword(password: string, hash: string): ReturnError | false {
+    const isPasswordValid = compareSync(password, hash);
+
+    if (!isPasswordValid) {
+      return { error: { code: StatusHttp.NOT_FOUND, error: { message: 'Invalid credentials' } } };
+    }
+
+    return false;
   }
 }
