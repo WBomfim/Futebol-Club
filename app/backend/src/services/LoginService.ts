@@ -23,8 +23,8 @@ export default class LoginService {
   public async login(infos: Login): Promise<ReturnUser> {
     const { email, password } = infos;
 
-    const { error: validate } = this._validateInfosLogin.validate(infos) as ReturnError;
-    if (validate) return validate;
+    const { error: errorInfos } = this._validateInfosLogin.validate(infos) as ReturnError;
+    if (errorInfos) return errorInfos;
 
     const user = await this._userModel.findOne({ where: { email } });
     if (!user) {
@@ -32,7 +32,6 @@ export default class LoginService {
         code: StatusHttp.UNAUTHORIZED, error: { message: 'Incorrect email or password' },
       };
     }
-
     const { password: hash } = user as User;
 
     const { error } = this._crypto.verifyPassword(password, hash) as ReturnError;
@@ -41,5 +40,12 @@ export default class LoginService {
     const token = this._token.generateToken(user as User);
 
     return { code: StatusHttp.OK, data: { token } };
+  }
+
+  public async returnRole(id: number): Promise<ReturnUser> {
+    const user = await this._userModel.findByPk(id);
+    if (!user) return { code: StatusHttp.NOT_FOUND, error: { message: 'User not found' } };
+    const { role } = user as User;
+    return { code: StatusHttp.OK, data: { role } };
   }
 }

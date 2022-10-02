@@ -5,6 +5,7 @@ export interface ReturnService {
   };
 }
 
+type dataLogin = { token: string } | { role: string };
 export interface ReturnUser extends ReturnService {
-  data?: { token: string };
+  data?: dataLogin;
 }
