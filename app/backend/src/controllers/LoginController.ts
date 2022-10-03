@@ -12,8 +12,7 @@ export default class LoginController {
   public async login(req: Request, res: Response): Promise<Response> {
     const { email, password } = req.body as Login;
     const { code, data, error } = await this._loginService.login({ email, password });
-    if (error) return res.status(code).json(error);
-    return res.status(code).json(data);
+    return res.status(code).json(data || error);
   }
 
   public async returnRole(req: Request, res: Response): Promise<Response> {
