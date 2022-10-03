@@ -18,8 +18,7 @@ export default class LoginController {
 
   public async returnRole(req: Request, res: Response): Promise<Response> {
     const { id } = req.body.payload;
-    const { code, data, error } = await this._loginService.returnRole(Number(id));
-    if (error) return res.status(code).json(error);
+    const { code, data } = await this._loginService.returnRole(Number(id));
     return res.status(code).json(data);
   }
 }
