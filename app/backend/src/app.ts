@@ -23,10 +23,10 @@ class App {
 
     this.app.use((
       err: Error,
-      _req: express.Request,
+      req: express.Request,
       res: express.Response,
-      _next: express.NextFunction,
-    ) => this._handleErrors.handleErrors(err, _req, res, _next));
+      next: express.NextFunction,
+    ) => this._handleErrors.handleErrors(err, req, res, next));
   }
 
   private config():void {
