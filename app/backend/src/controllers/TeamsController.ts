@@ -14,7 +14,8 @@ export default class TeamsController {
   }
 
   public async getTeam(req: Request, res: Response): Promise<Response> {
-    const { code, data, error } = await this._teamsService.getTeam(Number(req.params.id));
+    const { id } = req.params;
+    const { code, data, error } = await this._teamsService.getTeam(Number(id));
     return res.status(code).json(data || error);
   }
 }
