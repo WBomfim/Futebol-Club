@@ -8,7 +8,7 @@ export default class TeamsController {
     this._teamsService = new TeamsService();
   }
 
-  public async getTeams(req: Request, res: Response): Promise<Response> {
+  public async getTeams(_req: Request, res: Response): Promise<Response> {
     const { code, data, error } = await this._teamsService.getTeams();
     return res.status(code).json(data || error);
   }
