@@ -1,4 +1,5 @@
 import Team from '../database/models/Team';
+import Match from '../database/models/Match';
 
 export interface ReturnService {
   code: number;
@@ -12,6 +13,12 @@ export interface ReturnUser extends ReturnService {
   data?: dataLogin;
 }
 
+type dataTeam = Team | Team[];
 export interface ReturnTeam extends ReturnService {
-  data?: Team | Team[];
+  data?: dataTeam;
+}
+
+type dataMatch = Match | Match[];
+export interface ReturnMatch extends ReturnService {
+  data?: dataMatch;
 }
