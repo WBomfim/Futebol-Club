@@ -43,9 +43,7 @@ export default class LoginService {
   }
 
   public async returnRole(id: number): Promise<ReturnUser> {
-    const user = await this._userModel.findByPk(id);
-    if (!user) return { code: StatusHttp.NOT_FOUND, error: { message: 'User not found' } };
-    const { role } = user as User;
+    const { role } = await this._userModel.findByPk(id) as User;
     return { code: StatusHttp.OK, data: { role } };
   }
 }
