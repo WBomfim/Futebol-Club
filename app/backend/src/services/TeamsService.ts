@@ -11,7 +11,9 @@ export default class TeamsService {
 
   public async getTeams(): Promise<ReturnTeam> {
     const data = await this._teamsModel.findAll();
-    if (!data) return { code: StatusHttp.NOT_FOUND, error: { message: 'Teams not found' } };
+    if (!data || data.length === 0) {
+      return { code: StatusHttp.NOT_FOUND, error: { message: 'Teams not found' } };
+    }
     return { code: StatusHttp.OK, data };
   }
 
