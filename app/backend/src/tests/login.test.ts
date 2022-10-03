@@ -13,7 +13,7 @@ chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe('Testa a rota POST /login', () => {
+describe('Testa a rota /login', () => {
   const userResponse = usersFake[0] as UserModel;
   let loginResponse: Response;
 
