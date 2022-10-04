@@ -23,7 +23,8 @@ export interface MatchIncludesTeams extends Match {
   teamAway: { teamName: string };
 }
 
-type dataMatch = MatchIncludesTeams | MatchIncludesTeams[];
+type dataMatch = Match | Match[];
+type dataMatchTeams = MatchIncludesTeams | MatchIncludesTeams[];
 export interface ReturnMatch extends ReturnService {
-  data?: dataMatch;
+  data?: dataMatch | dataMatchTeams;
 }

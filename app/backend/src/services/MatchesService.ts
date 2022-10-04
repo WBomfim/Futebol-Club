@@ -1,6 +1,7 @@
 import Match from '../database/models/Match';
 import Team from '../database/models/Team';
 import { ReturnMatch, MatchIncludesTeams } from '../interfaces/ReturnService';
+import { MatchCreate } from '../interfaces/BodyRequest';
 
 export default class MatchesService {
   private _matches: typeof Match;
@@ -28,5 +29,10 @@ export default class MatchesService {
 
     if (!data || data.length === 0) return { code: 404, error: { message: 'No matches found' } };
     return { code: 200, data };
+  }
+
+  public async createMatch(match: MatchCreate): Promise<ReturnMatch> {
+    const data = await this._matches.create(match);
+    return { code: 201, data };
   }
 }

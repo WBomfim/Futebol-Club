@@ -12,6 +12,7 @@ export default class MatchesRoutes {
 
   public routes(): Router {
     this._router.get('/', (req, res) => this._matchesController.getMatches(req, res));
+    this._router.post('/', (req, res) => this._matchesController.createMatch(req, res));
 
     return this._router;
   }
