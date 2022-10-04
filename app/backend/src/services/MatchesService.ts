@@ -1,6 +1,7 @@
 import Match from '../database/models/Match';
 import Team from '../database/models/Team';
 import validateMatch from '../schemas/ValidateInfosMatch';
+import StatusHttp from '../types/statusHttp';
 import { ReturnMatch, MatchIncludesTeams } from '../interfaces/ReturnService';
 import { MatchCreate } from '../interfaces/BodyRequest';
 import ReturnError from '../interfaces/ReturnError';
@@ -31,8 +32,11 @@ export default class MatchesService {
       }) as MatchIncludesTeams[];
     }
 
-    if (!data || data.length === 0) return { code: 404, error: { message: 'No matches found' } };
-    return { code: 200, data };
+    if (!data || data.length === 0) {
+      return { code: StatusHttp.NOT_FOUND, error: { message: 'No matches found' } };
+    }
+
+    return { code: StatusHttp.OK, data };
   }
 
   public async createMatch(match: MatchCreate): Promise<ReturnMatch> {
@@ -40,11 +44,11 @@ export default class MatchesService {
     if (error) return error;
 
     const data = await this._matches.create(match);
-    return { code: 201, data };
+    return { code: StatusHttp.CREATED, data };
   }
 
   public async finishMatch(id: number): Promise<ReturnMatch> {
     await this._matches.update({ inProgress: 0 }, { where: { id } });
-    return { code: 200, data: { message: 'Finished' } };
+    return { code: StatusHttp.OK, data: { message: 'Finished' } };
   }
 }
