@@ -34,7 +34,7 @@ export default class Token {
       req.body.payload = payload;
       next();
     } catch (error) {
-      return res.status(StatusHttp.UNAUTHORIZED).json({ message: 'Invalid token' });
+      return res.status(StatusHttp.UNAUTHORIZED).json({ message: 'Token must be a valid token' });
     }
   }
 }

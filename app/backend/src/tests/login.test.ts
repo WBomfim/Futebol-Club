@@ -108,7 +108,7 @@ describe('Testa a rota /login', () => {
         response = await chai.request(app).get('/login/validate').set('Authorization', 'tokentestes');
         expect(response).to.have.status(401);
         expect(response.body).to.have.property('message');
-        expect(response.body.message).to.be.equal('Invalid token');
+        expect(response.body.message).to.be.equal('Token must be a valid token');
       });
 
       it('Retorna um status code "401" com a mensagem "Token not found"', async () => {
