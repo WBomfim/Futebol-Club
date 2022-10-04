@@ -4,7 +4,7 @@ import ReturnError from '../interfaces/ReturnError';
 import Team from '../database/models/Team';
 import StatusHttp from '../types/statusHttp';
 
-export default class validateInfosMatch extends Team {
+export default class ValidateInfosMatch extends Team {
   public static async validateInfosMatch(match: MatchCreate): Promise<ReturnError | false> {
     const { homeTeam, awayTeam } = match;
 
