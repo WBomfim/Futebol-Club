@@ -9,26 +9,25 @@ import ReturnError from '../interfaces/ReturnError';
 export default class MatchesService {
   private _matches: typeof Match;
   private _validateMatch: typeof validateMatch;
-  private _associations: object[];
 
   constructor() {
     this._matches = Match;
     this._validateMatch = validateMatch;
-    this._associations = [
-      { model: Team, as: 'teamHome', attributes: ['teamName'] },
-      { model: Team, as: 'teamAway', attributes: ['teamName'] },
-    ];
   }
 
   public async getMatches(inProgress?: string): Promise<ReturnMatch> {
     let data: MatchIncludesTeams[] | null;
+    const ASSOCIATIONS = [
+      { model: Team, as: 'teamHome', attributes: ['teamName'] },
+      { model: Team, as: 'teamAway', attributes: ['teamName'] },
+    ];
 
     if (inProgress === undefined) {
-      data = await this._matches.findAll({ include: this._associations }) as MatchIncludesTeams[];
+      data = await this._matches.findAll({ include: ASSOCIATIONS }) as MatchIncludesTeams[];
     } else {
       data = await this._matches.findAll({
         where: { inProgress: inProgress === 'true' },
-        include: this._associations,
+        include: ASSOCIATIONS,
       }) as MatchIncludesTeams[];
     }
 
