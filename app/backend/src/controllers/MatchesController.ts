@@ -8,8 +8,9 @@ export default class MatchesController {
     this._matchesService = new MatchesService();
   }
 
-  public async getMatches(_req: Request, res: Response): Promise<Response> {
-    const { code, data, error } = await this._matchesService.getMatches();
+  public async getMatches(req: Request, res: Response): Promise<Response> {
+    const { inProgress } = req.query;
+    const { code, data, error } = await this._matchesService.getMatches(Boolean(inProgress));
     return res.status(code).json(data || error);
   }
 }
