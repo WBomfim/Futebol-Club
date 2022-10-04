@@ -14,17 +14,17 @@ export default class MatchesService {
     ];
   }
 
-  public async getMatches(): Promise<ReturnMatch> {
-    const data = await this._matches.findAll({ include: this._associations });
+  public async getMatches(inProgress?: string): Promise<ReturnMatch> {
+    let data: Match[] | null;
 
-    if (!data || data.length === 0) return { code: 404, error: { message: 'No matches found' } };
-    return { code: 200, data };
-  }
-
-  public async getProgressMatches(inProgress: boolean): Promise<ReturnMatch> {
-    const data = await this._matches.findAll({
-      where: { inProgress }, include: this._associations,
-    });
+    if (inProgress === undefined) {
+      data = await this._matches.findAll({ include: this._associations });
+    } else {
+      data = await this._matches.findAll({
+        where: { inProgress: inProgress === 'true' },
+        include: this._associations,
+      });
+    }
 
     if (!data || data.length === 0) return { code: 404, error: { message: 'No matches found' } };
     return { code: 200, data };
