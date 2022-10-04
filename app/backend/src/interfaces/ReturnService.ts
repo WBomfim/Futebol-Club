@@ -18,7 +18,12 @@ export interface ReturnTeam extends ReturnService {
   data?: dataTeam;
 }
 
-type dataMatch = Match | Match[];
+export interface MatchIncludesTeams extends Match {
+  teamHome: { teamName: string };
+  teamAway: { teamName: string };
+}
+
+type dataMatch = MatchIncludesTeams | MatchIncludesTeams[];
 export interface ReturnMatch extends ReturnService {
   data?: dataMatch;
 }
