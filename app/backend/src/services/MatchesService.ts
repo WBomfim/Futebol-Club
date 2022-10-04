@@ -3,7 +3,7 @@ import Team from '../database/models/Team';
 import validateMatch from '../schemas/ValidateInfosMatch';
 import StatusHttp from '../types/statusHttp';
 import { ReturnMatch, MatchIncludesTeams } from '../interfaces/ReturnService';
-import { MatchCreate } from '../interfaces/BodyRequest';
+import { MatchCreate, MatchUpdate } from '../interfaces/BodyRequest';
 import ReturnError from '../interfaces/ReturnError';
 
 export default class MatchesService {
@@ -50,5 +50,10 @@ export default class MatchesService {
   public async finishMatch(id: number): Promise<ReturnMatch> {
     await this._matches.update({ inProgress: 0 }, { where: { id } });
     return { code: StatusHttp.OK, data: { message: 'Finished' } };
+  }
+
+  public async updateMatch(id: number, goals: MatchUpdate): Promise<ReturnMatch> {
+    await this._matches.update(goals, { where: { id } });
+    return { code: StatusHttp.OK, data: { message: 'Updated' } };
   }
 }
