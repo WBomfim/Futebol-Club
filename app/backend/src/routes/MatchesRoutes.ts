@@ -20,6 +20,7 @@ export default class MatchesRoutes {
       (req, res, next) => this._token.verifyToken(req, res, next),
       (req, res) => this._matchesController.createMatch(req, res),
     );
+    this._router.patch('/:id/finish', (req, res) => this._matchesController.finishMatch(req, res));
 
     return this._router;
   }

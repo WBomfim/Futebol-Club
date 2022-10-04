@@ -42,4 +42,9 @@ export default class MatchesService {
     const data = await this._matches.create(match);
     return { code: 201, data };
   }
+
+  public async finishMatch(id: number): Promise<ReturnMatch> {
+    await this._matches.update({ inProgress: 0 }, { where: { id } });
+    return { code: 200, data: { message: 'Finished' } };
+  }
 }

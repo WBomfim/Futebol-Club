@@ -26,5 +26,5 @@ export interface MatchIncludesTeams extends Match {
 type dataMatch = Match | Match[];
 type dataMatchTeams = MatchIncludesTeams | MatchIncludesTeams[];
 export interface ReturnMatch extends ReturnService {
-  data?: dataMatch | dataMatchTeams;
+  data?: dataMatch | dataMatchTeams | { message: string };
 }

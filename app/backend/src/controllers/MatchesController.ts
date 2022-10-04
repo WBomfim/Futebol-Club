@@ -30,4 +30,10 @@ export default class MatchesController {
 
     return res.status(code).json(data || error);
   }
+
+  public async finishMatch(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params;
+    const { code, data } = await this._matchesService.finishMatch(Number(id));
+    return res.status(code).json(data);
+  }
 }
