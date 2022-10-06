@@ -1,5 +1,6 @@
 import Team from '../database/models/Team';
 import Match from '../database/models/Match';
+import TeamBoard from './TeamBoar';
 
 export interface ReturnService {
   code: number;
@@ -27,4 +28,8 @@ type dataMatch = Match | Match[];
 type dataMatchTeams = MatchIncludesTeams | MatchIncludesTeams[];
 export interface ReturnMatch extends ReturnService {
   data?: dataMatch | dataMatchTeams | { message: string };
+}
+
+export interface LeaderBoards extends ReturnService {
+  data?: TeamBoard[];
 }

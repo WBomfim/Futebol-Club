@@ -1,3 +1,4 @@
+export type GamePlaceOptions = 'home' | 'away';
 export default interface TeamBoard {
   name: string,
   totalPoints: number,

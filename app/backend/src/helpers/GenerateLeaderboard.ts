@@ -1,7 +1,5 @@
 import { MatchIncludesTeams } from '../interfaces/ReturnService';
-import TeamBoard from '../interfaces/TeamBoar';
-
-type gamePlaceOptions = 'home' | 'away';
+import TeamBoard, { GamePlaceOptions } from '../interfaces/TeamBoar';
 
 export default class GenerateLeaderboard {
   private static generateTeamBoard(teamName: string, teamGoals: number, adversaryGoals: number):
@@ -60,7 +58,7 @@ export default class GenerateLeaderboard {
       return acc;
     }, []).sort(this.sortConditions);
 
-  public static getStatusTeams = (games: MatchIncludesTeams[], gamePlace?: gamePlaceOptions) => {
+  public static getStatusTeams = (games: MatchIncludesTeams[], gamePlace?: GamePlaceOptions) => {
     if (gamePlace === 'home') {
       const teamsBoards = this.getTeamStutusPerGames(games, true);
       return this.getStatusTeamsHome(teamsBoards);
