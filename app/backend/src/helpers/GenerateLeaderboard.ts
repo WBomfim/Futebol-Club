@@ -1,12 +1,13 @@
 import { MatchIncludesTeams } from '../interfaces/ReturnService';
 import TeamBoard from '../interfaces/TeamBoar';
 
+type gamePlaceOptions = 'home' | 'away';
+
 export default class GenerateLeaderboard {
-  private static initialStatus(teamName: string, teamGoals: number, adversaryGoals: number):
+  private static generateTeamBoard(teamName: string, teamGoals: number, adversaryGoals: number):
   TeamBoard {
     const auxEfficiency = teamGoals < adversaryGoals ? 0 : 33.33;
     const auxPoints = teamGoals > adversaryGoals ? 3 : 0;
-
     return {
       name: teamName,
       totalPoints: teamGoals === adversaryGoals ? 1 : auxPoints,
@@ -21,7 +22,7 @@ export default class GenerateLeaderboard {
     };
   }
 
-  private static sortCondition = (a: TeamBoard, b: TeamBoard) => (
+  private static sortConditions = (a: TeamBoard, b: TeamBoard) => (
     b.totalPoints - a.totalPoints
     || b.totalVictories - a.totalVictories
     || b.goalsBalance - a.goalsBalance
@@ -29,18 +30,19 @@ export default class GenerateLeaderboard {
     || b.goalsOwn - a.goalsOwn
   );
 
-  private static getStutusHomeGames = (games: MatchIncludesTeams[]) => games
-    .reduce((acc: TeamBoard[], { teamHome: { teamName }, homeTeamGoals, awayTeamGoals }) => {
-      acc.push(this.initialStatus(teamName, homeTeamGoals, awayTeamGoals));
-      return acc;
-    }, []);
+  private static getTeamStutusPerGames = (games: MatchIncludesTeams[], homeGame = false) => {
+    const nameTeam = homeGame ? 'teamHome' : 'teamAway';
+    return games
+      .reduce((acc: TeamBoard[], { [nameTeam]: { teamName }, homeTeamGoals, awayTeamGoals }) => {
+        if (homeGame) acc.push(this.generateTeamBoard(teamName, homeTeamGoals, awayTeamGoals));
+        else acc.push(this.generateTeamBoard(teamName, awayTeamGoals, homeTeamGoals));
+        return acc;
+      }, []);
+  };
 
-  static getStatusTeamsHome = (games: MatchIncludesTeams[]) => {
-    const statusTeamsHome = this.getStutusHomeGames(games);
-
-    return statusTeamsHome.reduce((acc: TeamBoard[], currTeam) => {
+  private static getStatusTeamsHome = (teamsBoards: TeamBoard[]) => teamsBoards
+    .reduce((acc: TeamBoard[], currTeam) => {
       const teamIndex = acc.findIndex(({ name }) => name === currTeam.name);
-
       if (teamIndex === -1) acc.push(currTeam);
       else {
         const team = acc[teamIndex];
@@ -56,6 +58,21 @@ export default class GenerateLeaderboard {
         team.efficiency = ((team.totalPoints / (team.totalGames * 3)) * 100).toFixed(2);
       }
       return acc;
-    }, []).sort(this.sortCondition);
+    }, []).sort(this.sortConditions);
+
+  public static getStatusTeams = (games: MatchIncludesTeams[], gamePlace?: gamePlaceOptions) => {
+    if (gamePlace === 'home') {
+      const teamsBoards = this.getTeamStutusPerGames(games, true);
+      return this.getStatusTeamsHome(teamsBoards);
+    }
+
+    if (gamePlace === 'away') {
+      const teamsBoards = this.getTeamStutusPerGames(games);
+      return this.getStatusTeamsHome(teamsBoards);
+    }
+
+    const teamsHome = this.getTeamStutusPerGames(games, true);
+    const teamsAway = this.getTeamStutusPerGames(games, false);
+    return this.getStatusTeamsHome([...teamsHome, ...teamsAway]);
   };
 }
