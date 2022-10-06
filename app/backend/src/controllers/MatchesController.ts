@@ -27,7 +27,6 @@ export default class MatchesController {
     const { code, data, error } = await this._matchesService.createMatch(
       { homeTeam, awayTeam, homeTeamGoals, awayTeamGoals, inProgress },
     );
-
     return res.status(code).json(data || error);
   }
 

@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import LeaderboardService from '../services/leaderBoardService';
+import LeaderBoardService from '../services/LeaderBoardService';
 import { GamePlaceOptions } from '../interfaces/TeamBoar';
 
 export default class LeaderBoardController {
-  private _leaderboardService: LeaderboardService;
+  private _leaderboardService: LeaderBoardService;
 
   constructor() {
-    this._leaderboardService = new LeaderboardService();
+    this._leaderboardService = new LeaderBoardService();
   }
 
   public async getLeaderboard(req: Request, res: Response): Promise<Response> {

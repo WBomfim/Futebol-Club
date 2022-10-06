@@ -22,7 +22,6 @@ export default class LoginService {
 
   public async login(infos: Login): Promise<ReturnUser> {
     const { email, password } = infos;
-
     const { error: errorInfos } = this._validateInfosLogin.validate(infos) as ReturnError;
     if (errorInfos) return errorInfos;
 
@@ -32,13 +31,12 @@ export default class LoginService {
         code: StatusHttp.UNAUTHORIZED, error: { message: 'Incorrect email or password' },
       };
     }
-    const { password: hash } = user as User;
 
+    const { password: hash } = user as User;
     const { error } = this._crypto.verifyPassword(password, hash) as ReturnError;
     if (error) return error;
 
     const token = this._token.generateToken(user as User);
-
     return { code: StatusHttp.OK, data: { token } };
   }
 

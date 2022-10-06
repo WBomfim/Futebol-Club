@@ -8,15 +8,12 @@ export interface ReturnService {
     message: string;
   };
 }
-
-type dataLogin = { token: string } | { role: string };
 export interface ReturnUser extends ReturnService {
-  data?: dataLogin;
+  data?: { token: string } | { role: string };
 }
 
-type dataTeam = Team | Team[];
 export interface ReturnTeam extends ReturnService {
-  data?: dataTeam;
+  data?: Team | Team[];
 }
 
 export interface MatchIncludesTeams extends Match {
@@ -24,10 +21,8 @@ export interface MatchIncludesTeams extends Match {
   teamAway: { teamName: string };
 }
 
-type dataMatch = Match | Match[];
-type dataMatchTeams = MatchIncludesTeams | MatchIncludesTeams[];
 export interface ReturnMatch extends ReturnService {
-  data?: dataMatch | dataMatchTeams | { message: string };
+  data?: Match | Match[] | MatchIncludesTeams | MatchIncludesTeams[] | { message: string };
 }
 
 export interface LeaderBoards extends ReturnService {

@@ -1,17 +1,17 @@
 import Match from '../database/models/Match';
 import Team from '../database/models/Team';
-import GenerateLeaderboard from '../helpers/GenerateLeaderboard';
+import GenerateLeaderBoard from '../helpers/GenerateLeaderBoard';
 import { MatchIncludesTeams, LeaderBoards } from '../interfaces/ReturnService';
 import { GamePlaceOptions } from '../interfaces/TeamBoar';
 import StatusHttp from '../types/statusHttp';
 
-export default class LeaderboardService {
+export default class LeaderBoardService {
   private _matches: typeof Match;
-  private _generateLeaderboard: typeof GenerateLeaderboard;
+  private _generateLeaderboard: typeof GenerateLeaderBoard;
 
   constructor() {
     this._matches = Match;
-    this._generateLeaderboard = GenerateLeaderboard;
+    this._generateLeaderboard = GenerateLeaderBoard;
   }
 
   public async getLeaderboard(gamePlace: GamePlaceOptions): Promise<LeaderBoards> {

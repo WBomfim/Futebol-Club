@@ -9,8 +9,8 @@ export default class LoginRoutes {
 
   constructor() {
     this._router = Router();
-    this._loginController = new LoginController();
     this._token = new Token();
+    this._loginController = new LoginController();
   }
 
   public routes(): Router {

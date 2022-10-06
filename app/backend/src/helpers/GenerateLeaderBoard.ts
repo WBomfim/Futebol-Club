@@ -1,7 +1,7 @@
 import { MatchIncludesTeams } from '../interfaces/ReturnService';
 import TeamBoard, { GamePlaceOptions } from '../interfaces/TeamBoar';
 
-export default class GenerateLeaderboard {
+export default class GenerateLeaderBoard {
   private static generateTeamBoard(teamName: string, teamGoals: number, adversaryGoals: number):
   TeamBoard {
     const auxEfficiency = teamGoals < adversaryGoals ? 0 : 33.33;
@@ -38,8 +38,8 @@ export default class GenerateLeaderboard {
       }, []);
   };
 
-  private static getStatusTeamsHome = (teamsBoards: TeamBoard[]) => teamsBoards
-    .reduce((acc: TeamBoard[], currTeam) => {
+  private static getStatusTeamsHome = (teamsBoards: TeamBoard[]) => (
+    teamsBoards.reduce((acc: TeamBoard[], currTeam) => {
       const teamIndex = acc.findIndex(({ name }) => name === currTeam.name);
       if (teamIndex === -1) acc.push(currTeam);
       else {
@@ -56,7 +56,8 @@ export default class GenerateLeaderboard {
         team.efficiency = ((team.totalPoints / (team.totalGames * 3)) * 100).toFixed(2);
       }
       return acc;
-    }, []).sort(this.sortConditions);
+    }, []).sort(this.sortConditions)
+  );
 
   public static getStatusTeams = (games: MatchIncludesTeams[], gamePlace?: GamePlaceOptions) => {
     if (gamePlace === 'home') {
