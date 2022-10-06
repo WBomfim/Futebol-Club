@@ -4,8 +4,8 @@ import Token from '../helpers/Token';
 
 export default class LoginRoutes {
   private _router: Router;
-  private _loginController: LoginController;
   private _token: Token;
+  private _loginController: LoginController;
 
   constructor() {
     this._router = Router();
