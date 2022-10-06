@@ -2,11 +2,14 @@ import { MatchIncludesTeams } from '../interfaces/ReturnService';
 import TeamBoard from '../interfaces/TeamBoar';
 
 export default class GenerateLeaderboard {
-  static initialStatus(teamName: string, teamGoals: number, adversaryGoals: number) {
+  private static initialStatus(teamName: string, teamGoals: number, adversaryGoals: number):
+  TeamBoard {
     const auxEfficiency = teamGoals < adversaryGoals ? 0 : 33.33;
+    const auxPoints = teamGoals > adversaryGoals ? 3 : 0;
+
     return {
       name: teamName,
-      totalPoints: teamGoals === adversaryGoals ? 1 : 3,
+      totalPoints: teamGoals === adversaryGoals ? 1 : auxPoints,
       totalGames: 1,
       totalVictories: teamGoals > adversaryGoals ? 1 : 0,
       totalDraws: teamGoals === adversaryGoals ? 1 : 0,
@@ -18,7 +21,7 @@ export default class GenerateLeaderboard {
     };
   }
 
-  static sortCondition = (a: TeamBoard, b: TeamBoard) => (
+  private static sortCondition = (a: TeamBoard, b: TeamBoard) => (
     b.totalPoints - a.totalPoints
     || b.totalVictories - a.totalVictories
     || b.goalsBalance - a.goalsBalance
@@ -26,66 +29,33 @@ export default class GenerateLeaderboard {
     || b.goalsOwn - a.goalsOwn
   );
 
-  static homeTeamsStatus = (games: MatchIncludesTeams[]) => games
+  private static getStutusHomeGames = (games: MatchIncludesTeams[]) => games
     .reduce((acc: TeamBoard[], { teamHome: { teamName }, homeTeamGoals, awayTeamGoals }) => {
-      const teamIndex = acc.findIndex(({ name }) => name === teamName);
+      acc.push(this.initialStatus(teamName, homeTeamGoals, awayTeamGoals));
+      return acc;
+    }, []);
 
-      if (teamIndex === -1) {
-        acc.push(this.initialStatus(teamName, homeTeamGoals, awayTeamGoals));
-      } else {
+  static getStatusTeamsHome = (games: MatchIncludesTeams[]) => {
+    const statusTeamsHome = this.getStutusHomeGames(games);
+
+    return statusTeamsHome.reduce((acc: TeamBoard[], currTeam) => {
+      const teamIndex = acc.findIndex(({ name }) => name === currTeam.name);
+
+      if (teamIndex === -1) acc.push(currTeam);
+      else {
         const team = acc[teamIndex];
 
-        if (homeTeamGoals === awayTeamGoals) team.totalPoints += 1; team.totalDraws += 1;
-
-        if (homeTeamGoals > awayTeamGoals) team.totalPoints += 3; team.totalVictories += 1;
-
-        if (homeTeamGoals < awayTeamGoals) team.totalLosses += 1;
-
+        team.totalPoints += currTeam.totalPoints;
+        team.totalVictories += currTeam.totalVictories;
+        team.totalDraws += currTeam.totalDraws;
+        team.totalLosses += currTeam.totalLosses;
         team.totalGames += 1;
-        team.goalsFavor += homeTeamGoals;
-        team.goalsOwn += awayTeamGoals;
-        team.goalsBalance += homeTeamGoals - awayTeamGoals;
-        team.efficiency = Number(((team.totalPoints / (team.totalGames * 3)) * 100).toFixed(2));
+        team.goalsFavor += currTeam.goalsFavor;
+        team.goalsOwn += currTeam.goalsOwn;
+        team.goalsBalance += currTeam.goalsBalance;
+        team.efficiency = ((team.totalPoints / (team.totalGames * 3)) * 100).toFixed(2);
       }
-
       return acc;
     }, []).sort(this.sortCondition);
+  };
 }
-
-/* const awayTeamsStatus = (games) =>  games.reduce((acc, { teamAway: { teamName }, homeTeamGoals, awayTeamGoals }) => {
-  const teamIndex = acc.findIndex(({ name }) => name === teamName);
-
-  if (teamIndex === -1) {
-    acc.push(initialStatus(teamName, awayTeamGoals, homeTeamGoals));
-  } else {
-
-  const team = acc[teamIndex];
-
-  if (homeTeamGoals === awayTeamGoals) {
-    team.totalPoints += 1;
-    team.totalDraws += 1;
-  }
-
-  if (homeTeamGoals < awayTeamGoals) {
-    team.totalPoints += 3;
-    team.totalVictories += 1;
-  }
-
-  if (homeTeamGoals > awayTeamGoals) {
-    team.totalLosses += 1;
-  }
-
-  team.totalGames += 1;
-  team.goalsFavor += awayTeamGoals;
-  team.goalsOwn += homeTeamGoals;
-  team.goalsBalance += awayTeamGoals - homeTeamGoals;
-  team.efficiency = (team.totalPoints / (team.totalGames * 3) * 100).toFixed(2);
-  }
-
-  return acc;
-}, []).sort(sortCondition);
-
-const teamsStatus = (games, isHome) => {
-  const teams = isHome ? homeTeamsStatus(games) : awayTeamsStatus(games);
-  return teams;
-} */
